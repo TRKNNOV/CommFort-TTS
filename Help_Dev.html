@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Техническая документация — CommFort TTS</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #ffffff;
+            --text: #1e293b;
+            --accent: #0f766e;
+            --accent-bg: #f0fdfa;
+            --code-bg: #f1f5f9;
+            --border: #cbd5e1;
+            --flow-bg: #f8fafc;
+        }
+        body {
+            font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg);
+            margin: 0;
+            padding: 24px;
+        }
+        .container {
+            max-width: 1020px;
+            margin: 0 auto;
+            background: var(--card);
+            padding: 36px 46px;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        header {
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 18px;
+            margin-bottom: 26px;
+        }
+        h1 { color: var(--accent); margin: 0; font-size: 1.8em; }
+        .subtitle { color: #475569; margin-top: 6px; font-size: 1.05em; }
+        nav {
+            background: var(--accent-bg);
+            border: 1px solid #99f6e4;
+            padding: 16px 22px;
+            border-radius: 10px;
+            margin-bottom: 28px;
+        }
+        nav ol { margin: 8px 0 0 0; padding-left: 22px; }
+        nav a { color: var(--accent); text-decoration: none; font-weight: 600; }
+        nav a:hover { text-decoration: underline; }
+        h2 {
+            color: #0f172a;
+            border-left: 5px solid var(--accent);
+            padding-left: 14px;
+            margin-top: 38px;
+            font-size: 1.35em;
+        }
+        code {
+            background: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.92em;
+            color: #0f172a;
+        }
+        .flow-box {
+            background: var(--flow-bg);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .flow-step {
+            background: #ffffff;
+            border: 1px solid #94a3b8;
+            border-left: 5px solid var(--accent);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 8px 0;
+        }
+        .flow-arrow {
+            text-align: center;
+            font-weight: bold;
+            color: var(--accent);
+            font-size: 1.2em;
+            line-height: 1.1;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 18px 0;
+        }
+        .module-card {
+            background: var(--flow-bg);
+            border: 1px solid var(--border);
+            border-top: 4px solid var(--accent);
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .module-card h3 { margin: 0 0 8px 0; color: var(--accent); font-size: 1.1em; }
+        table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 0.95em; }
+        th, td { border: 1px solid var(--border); padding: 10px 12px; text-align: left; vertical-align: top; }
+        th { background: var(--accent-bg); color: var(--accent); }
+        footer {
+            margin-top: 42px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Техническая документация — CommFort TTS</h1>
+        <div class="subtitle">Архитектура модулей, блок-схемы обработки данных, API-вызовы и структура конфигурации</div>
+    </header>
+
+    <nav>
+        <strong>Разделы технической документации:</strong>
+        <ol>
+            <li><a href="#arch">Модульная архитектура проекта и файловая структура</a></li>
+            <li><a href="#flow-tts">Блок-схема конвейера озвучивания (Парсер .cflog &rarr; Приоритеты TTS)</a></li>
+            <li><a href="#flow-stt">Блок-схема конвейера голосового ввода (MCI &rarr; Vosk / Win+H)</a></li>
+            <li><a href="#funcs">Справочник функций по модулям</a></li>
+            <li><a href="#vars">Глобальные переменные и структура tts_settings.ini</a></li>
+        </ol>
+    </nav>
+
+    <section id="arch">
+        <h2>1. Модульная архитектура проекта</h2>
+        <p>Проект написан на <strong>AutoHotkey v2.0</strong> и разделён на точку входа и 4 функциональных модуля для изоляции логики, интерфейса и системных вызовов:</p>
+
+        <div class="grid-2">
+            <div class="module-card">
+                <h3>Main.ahk</h3>
+                <p>Точка входа. Обеспечивает <code>#SingleInstance Force</code> и строго последовательную сборку модулей через директивы <code>#Include</code>.</p>
+            </div>
+            <div class="module-card">
+                <h3>Part_1.ahk (Ядро и мониторинг)</h3>
+                <p>Объявление супер-глобальных переменных, словарей фильтрации и смайлов, управление иконкой трея, логирование ошибок и таймер слежения за процессом <code>CommFort.exe</code>.</p>
+            </div>
+            <div class="module-card">
+                <h3>Part_2.ahk (Инициализация и профили)</h3>
+                <p>Определение пола по <code>Accounts.ini</code>, инициализация COM-объектов <code>SAPI.SpVoice</code>, прогрев библиотеки <code>libvosk.dll</code>, загрузка настроек профиля и отправка сетевого тега голоса.</p>
+            </div>
+            <div class="module-card">
+                <h3>Part_3.ahk (Парсер и синтез речи)</h3>
+                <p>Бинарный декодер файлов истории <code>.cflog</code>, извлечение сетевых тегов <code>[url="tts:..."]</code>, маршрутизация между SAPI, Piper и Yandex Cloud, неблокирующий WAV-плеер.</p>
+            </div>
+            <div class="module-card">
+                <h3>Part_4.ahk (GUI и голосовой ввод)</h3>
+                <p>Объектно-ориентированный менеджер интерфейса <code>class TtsGuiManager</code> (3 вкладки) и обработчик захвата речи с микрофона по удержанию <kbd>LCtrl</kbd>.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="flow-tts">
+        <h2>2. Блок-схема конвейера озвучивания (.cflog &rarr; TTS)</h2>
+        <div class="flow-box">
+            <div class="flow-step"><strong>Шаг 1. Таймер <code>ParseBinaryLog()</code> (каждые 500 мс):</strong> открывает <code>&lt;Канал&gt;.cflog</code> в режиме совместного чтения (<code>r-d</code>) и считывает новые байты со смещения <code>lastPos</code>.</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-step"><strong>Шаг 2. Разбор бинарных блоков (маркер <code>0xBC / 188</code>):</strong> определяет тип события: <code>110</code> — текстовое сообщение, <code>111</code> — отправка картинки, <code>112 / 115</code> — системное событие.</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-step"><strong>Шаг 3. Фильтрация и сетевой тег:</strong> проверка <code>IgnoreList</code> и <code>SkipMyMessages</code> &rarr; вызов <code>ExtractAndSaveSharedVoice()</code> (сохраняет <code>[Shared_Ник]</code> при обнаружении <code>[url="tts:..."]</code>) &rarr; фильтрация мата и замена смайлов.</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-step"><strong>Шаг 4. Каскад приоритетов выбора голоса:</strong><br>
+                1) <code>[Custom_Ник]</code> — ручная настройка слушателя (высший приоритет);<br>
+                2) <code>[Shared_Ник]</code> — голос, переданный самим отправителем через чат;<br>
+                3) <code>Автоподбор</code> — по полу (<code>IsUserFemale</code>) и детерминированному хешу никнейма.</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-step"><strong>Шаг 5. Синтез речи:</strong> маршрутизация в <code>SAPI.SpVoice</code> (с SSML-обработкой для Деда Вани), консольный <code>piper.exe</code> или REST API <code>Yandex SpeechKit</code>.</div>
+        </div>
+    </section>
+
+    <section id="flow-stt">
+        <h2>3. Блок-схема конвейера голосового ввода (Push-to-Talk)</h2>
+        <div class="flow-box">
+            <div class="flow-step"><strong>Шаг 1. Перехват <code>~LCtrl</code>:</strong> проверка флага <code>!isVoiceRecBusy</code> и выдержка паузы <strong>250 мс</strong> (отсекает быстрые комбинации <code>Ctrl+C / Ctrl+V</code>).</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-step"><strong>Шаг 2. Выбор движка (Автовыбор):</strong> проверка наличия <code>vosk\libvosk.dll</code> и папки <code>vosk\model\</code>. Если найдены — локальный Vosk, иначе — системная диктовка Windows (<code>Win+H</code>).</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-step"><strong>Шаг 3. Захват аудио (Windows MCI):</strong> сигнал <code>850 Гц</code> &rarr; запись через <code>winmm\mciSendStringW</code> напрямую в формат <strong>PCM 16 000 Гц, 16 бит, моно</strong> до отпускания <code>LCtrl</code> &rarr; сигнал <code>550 Гц</code>.</div>
+            <div class="flow-arrow">&darr;</div>
+            <div class="flow-step"><strong>Шаг 4. Распознавание и отправка:</strong> передача PCM-буфера (после 44-байтного заголовка WAV) в <code>vosk_recognizer_accept_waveform</code> &rarr; парсинг JSON &rarr; заглавная первая буква &rarr; безопасная вставка через <code>ClipboardAll()</code> и отправка по <code>Enter</code>.</div>
+        </div>
+    </section>
+    <section id="funcs">
+        <h2>4. Справочник функций по модулям</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Модуль</th>
+                    <th>Функция / Метод</th>
+                    <th>Назначение и логика работы</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>Part_1.ahk</code></td>
+                    <td><code>WatchCommFortProcess()</code></td>
+                    <td>Таймер (2000 мс). Отслеживает процесс <code>CommFort.exe</code>, определяет активный профиль из <code>ViewerSettings.ini</code> и запускает или перезагружает движок при смене аккаунта.</td>
+                </tr>
+                <tr>
+                    <td><code>Part_1.ahk</code></td>
+                    <td><code>TrayClickCallback()</code> / <code>SetTrayIconState()</code></td>
+                    <td>Переключает глобальный флаг тишины <code>isMuted</code> по левому клику в трее и меняет системную иконку (<code>shell32.dll</code>).</td>
+                </tr>
+                <tr>
+                    <td><code>Part_1.ahk</code></td>
+                    <td><code>LogError(context, err)</code></td>
+                    <td>Записывает исключения в <code>tts_errors.log</code> с автоматической ротацией при превышении размера 1 МБ.</td>
+                </tr>
+                <tr>
+                    <td><code>Part_2.ahk</code></td>
+                    <td><code>InitSpeechEngine()</code></td>
+                    <td>Создаёт COM-объекты <code>SAPI.SpVoice</code>, синхронизирует позицию чтения лога, озвучивает приветствие Деда Вани, отправляет сетевой тег голоса и прогревает <code>InitVoskEngine()</code>.</td>
+                </tr>
+                <tr>
+                    <td><code>Part_2.ahk</code></td>
+                    <td><code>InitVoskEngine()</code></td>
+                    <td>Однократно загружает <code>libvosk.dll</code> и модель распознавания речи в оперативную память для мгновенного отклика при нажатии рации.</td>
+                </tr>
+                <tr>
+                    <td><code>Part_2.ahk</code></td>
+                    <td><code>SendMySharedVoiceTag()</code></td>
+                    <td>Формирует BB-ссылку <code>[url="tts:Ключ|Скорость"]Приветствие[/url]</code> и отправляет её в активный канал при входе в чат.</td>
+                </tr>
+                <tr>
+                    <td><code>Part_3.ahk</code></td>
+                    <td><code>ParseBinaryLog()</code></td>
+                    <td>Читает бинарные блоки (маркер <code>188</code>) из <code>.cflog</code>, разбирает UTF-16 строки сообщений и управляет очередью озвучивания.</td>
+                </tr>
+                <tr>
+                    <td><code>Part_3.ahk</code></td>
+                    <td><code>SpeakByVoiceId()</code></td>
+                    <td>Единый маршрутизатор синтеза речи: распределяет вызовы между SAPI, <code>SpeakLocalAi()</code> (Piper) и <code>SpeakCloudAi()</code> (Yandex), применяет SSML-бас для Деда Вани.</td>
+                </tr>
+                <tr>
+                    <td><code>Part_3.ahk</code></td>
+                    <td><code>ExtractAndSaveSharedVoice()</code> / <code>ResolveSharedVoiceId()</code></td>
+                    <td>Извлекает скрытый тег голоса из входящих сообщений, сохраняет его в секцию <code>[Shared_Ник]</code> и сопоставляет с локально установленными голосами слушателя.</td>
+                </tr>
+                <tr>
+                    <td><code>Part_3.ahk</code></td>
+                    <td><code>IsUserFemale()</code></td>
+                    <td>Определяет пол пользователя по байту из лога, значку из <code>Accounts.ini</code>, словарю мужских имён на «-а/-я» и окончанию никнейма.</td>
+                </tr>
+                <tr>
+                    <td><code>Part_4.ahk</code></td>
+                    <td><code>TtsGuiManager</code></td>
+                    <td>Статический класс управления окном настроек (вкладки «Основные», «Персональные голоса», «О программе»), модальными окнами ИИ и предпрослушиванием.</td>
+                </tr>
+                <tr>
+                    <td><code>Part_4.ahk</code></td>
+                    <td><code>HandleVoiceInputSession()</code></td>
+                    <td>Обработчик голосового ввода по удержанию <code>LCtrl</code>: записывает PCM 16 кГц через <code>winmm.dll</code>, распознаёт через Vosk (или <code>Win+H</code>) и отправляет текст в чат.</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="vars">
+        <h2>5. Глобальные переменные и структура tts_settings.ini</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Переменная / Секция INI</th>
+                    <th>Тип</th>
+                    <th>Описание</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>ActiveProfile</code> / <code>ActiveProfileGender</code></td>
+                    <td>String / Int</td>
+                    <td>Текущий логин пользователя в CommFort и код его пола из <code>Accounts.ini</code>.</td>
+                </tr>
+                <tr>
+                    <td><code>TtsMode</code></td>
+                    <td>Int (1..3)</td>
+                    <td>Активный режим синтеза: <code>1</code> — SAPI, <code>2</code> — Локальный ИИ (Piper), <code>3</code> — Облачный ИИ (Yandex).</td>
+                </tr>
+                <tr>
+                    <td><code>VoiceInputMode</code></td>
+                    <td>Int (0/1)</td>
+                    <td>Флаг активности голосового ввода по удержанию клавиши <code>Левый Ctrl</code>.</td>
+                </tr>
+                <tr>
+                    <td><code>voskModelPtr</code> / <code>voskDllLoaded</code></td>
+                    <td>Ptr / Bool</td>
+                    <td>Указатель на загруженную в память модель Vosk и флаг готовности библиотеки <code>libvosk.dll</code>.</td>
+                </tr>
+                <tr>
+                    <td><code>[&lt;ActiveProfile&gt;]</code> (INI)</td>
+                    <td>Секция INI</td>
+                    <td>Индивидуальные настройки профиля: канал, голос диктора, громкость, скорость, игнор-лист и ключи ИИ.</td>
+                </tr>
+                <tr>
+                    <td><code>[Custom_&lt;Ник&gt;]</code> (INI)</td>
+                    <td>Секция INI</td>
+                    <td>Персональные настройки голоса, громкости и скорости, назначенные слушателем для конкретного собеседника.</td>
+                </tr>
+                <tr>
+                    <td><code>[Shared_&lt;Ник&gt;]</code> (INI)</td>
+                    <td>Секция INI</td>
+                    <td>Сетевой профиль голоса (<code>VoiceKey</code>, <code>Rate</code>), автоматически полученный от собеседника из чата.</td>
+                </tr>
+                <tr>
+                    <td><code>[MySharedVoice_&lt;Профиль&gt;]</code> (INI)</td>
+                    <td>Секция INI</td>
+                    <td>Собственный сетевой голос пользователя, который передаётся в чат при входе.</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <footer>
+        Техническая документация проекта CommFort TTS &bull; AutoHotkey v2.0 &bull; Создано совместно с ИИ-ассистентом Google (Gemini)
+    </footer>
+</div>
+</body>
+</html>

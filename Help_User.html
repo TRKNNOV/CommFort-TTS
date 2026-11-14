@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Руководство пользователя — Голосовой модуль CommFort TTS</title>
+    <style>
+        :root {
+            --bg: #f4f6f9;
+            --card: #ffffff;
+            --text: #1f2937;
+            --accent: #1d4ed8;
+            --accent-bg: #eff6ff;
+            --border: #d1d5db;
+            --tip-bg: #ecfdf5;
+            --tip-border: #10b981;
+            --warn-bg: #fffbeb;
+            --warn-border: #f59e0b;
+            --font-size: 18px;
+        }
+        body {
+            font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+            font-size: var(--font-size);
+            line-height: 1.65;
+            color: var(--text);
+            background: var(--bg);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card);
+            padding: 35px 45px;
+            border-radius: 14px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        header {
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 20px;
+            margin-bottom: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        h1 { color: var(--accent); font-size: 1.75em; margin: 0; }
+        .subtitle { color: #4b5563; font-size: 1.05em; margin-top: 6px; }
+        .font-controls button {
+            background: var(--accent-bg);
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 6px;
+        }
+        .font-controls button:hover { background: var(--accent); color: #fff; }
+        nav {
+            background: var(--accent-bg);
+            padding: 18px 24px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        nav strong { display: block; margin-bottom: 8px; color: var(--accent); }
+        nav ol { margin: 0; padding-left: 22px; }
+        nav li { margin-bottom: 5px; }
+        nav a { color: var(--accent); text-decoration: none; font-weight: 600; }
+        nav a:hover { text-decoration: underline; }
+        h2 {
+            color: #111827;
+            border-left: 5px solid var(--accent);
+            padding-left: 14px;
+            margin-top: 38px;
+            font-size: 1.35em;
+        }
+        .box-tip {
+            background: var(--tip-bg);
+            border-left: 5px solid var(--tip-border);
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin: 18px 0;
+        }
+        .box-warn {
+            background: var(--warn-bg);
+            border-left: 5px solid var(--warn-border);
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin: 18px 0;
+        }
+        kbd {
+            background: #e5e7eb;
+            border: 1px solid #9ca3af;
+            border-radius: 5px;
+            padding: 2px 8px;
+            font-family: Consolas, monospace;
+            font-weight: bold;
+        }
+        table { width: 100%; border-collapse: collapse; margin: 18px 0; }
+        th, td { border: 1px solid var(--border); padding: 12px 14px; text-align: left; }
+        th { background: var(--accent-bg); color: var(--accent); }
+        footer {
+            margin-top: 40px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <div>
+            <h1>Голосовой модуль CommFort TTS</h1>
+            <div class="subtitle">Подробное руководство пользователя по настройке озвучки и голосового ввода</div>
+        </div>
+        <div class="font-controls">
+            <button onclick="changeFont(-2)" title="Уменьшить шрифт">А−</button>
+            <button onclick="changeFont(0)" title="Обычный шрифт">А</button>
+            <button onclick="changeFont(3)" title="Увеличить шрифт">А+</button>
+        </div>
+    </header>
+
+    <nav>
+        <strong>Содержание руководства:</strong>
+        <ol>
+            <li><a href="#s1">Запуск и управление из системного трея</a></li>
+            <li><a href="#s2">Вкладка «Основные» — выбор канала, движка и громкости</a></li>
+            <li><a href="#s3">Выбор движка синтеза речи (SAPI, Piper, Yandex Cloud)</a></li>
+            <li><a href="#s4">Вкладка «Персональные голоса» — индивидуальный микшер</a></li>
+            <li><a href="#s5">Функция «Мой голос для других» (обмен голосами в чате)</a></li>
+            <li><a href="#s6">Голосовой ввод сообщений (режим рации на Левый Ctrl)</a></li>
+            <li><a href="#s7">Частые вопросы, смайлы и диагностика</a></li>
+        </ol>
+    </nav>
+
+    <section id="s1">
+        <h2>1. Запуск и управление из системного трея</h2>
+        <p>После запуска файла <strong>Main.ahk</strong> (или при автоматической загрузке с Windows) модуль сворачивается в системный трей (возле часов) и ожидает запуска чата <strong>CommFort</strong>.</p>
+        <ul>
+            <li>При входе в чат диктор произносит: <em>«Голосовой модуль синхронизирован»</em>, а егерь <strong>Дед Ваня</strong> приветствует вас с учётом вашего пола.</li>
+            <li><strong>Одиночный левый клик</strong> по значку в трее мгновенно включает или отключает звук озвучки (режим «Без звука»).</li>
+            <li><strong>Двойной левый клик</strong> (или правый клик &rarr; <em>«НАСТРОЙКИ»</em>) открывает окно управления.</li>
+        </ul>
+    </section>
+
+    <section id="s2">
+        <h2>2. Вкладка «Основные»</h2>
+        <ul>
+            <li><strong>Выбор канала:</strong> укажите канал чата (по умолчанию <code>main</code>), который будет озвучиваться.</li>
+            <li><strong>Голос чата (Диктор):</strong> голос, объявляющий автора (<em>«Пишет [Ник]»</em>), системные события и отправку картинок. Кнопка <strong>«🔊»</strong> позволяет прослушать голос.</li>
+            <li><strong>Голоса пользователей:</strong> общая громкость и скорость речи для всех собеседников по умолчанию.</li>
+            <li><strong>Не озвучивать ники:</strong> список ников через запятую (боты, информеры), которые будут игнорироваться.</li>
+            <li><strong>Не озвучивать мои сообщения:</strong> отключает озвучивание ваших собственных реплик на вашем ПК.</li>
+            <li><strong>Включить голосовой ввод:</strong> активирует отправку сообщений голосом по удержанию <kbd>Левый Ctrl</kbd>.</li>
+            <li><strong>Автоматически загружать с Windows:</strong> ставит программу в автозагрузку системы.</li>
+        </ul>
+        <p>После любых изменений на первой вкладке нажмите кнопку <strong>«Сохранить всё»</strong> внизу окна.</p>
+    </section>
+
+    <section id="s3">
+        <h2>3. Выбор движка синтеза речи (TTS)</h2>
+        <ul>
+            <li><strong>Стандартный SAPI:</strong> использует голоса, установленные в Windows (RHVoice, Vocalizer, Microsoft Irina/Pavel). Работает без интернета и дополнительных папок.</li>
+            <li><strong>Локальный ИИ (Piper):</strong> нейросетевые голоса высокого качества без интернета. Нажмите <strong>«⚙ Настроить...»</strong> и укажите папку с программой <code>piper.exe</code> и файлами моделей <code>.onnx</code>.</li>
+            <li><strong>Облачный ИИ (Yandex):</strong> онлайн-синтез Yandex SpeechKit. По кнопке <strong>«⚙ Настроить...»</strong> введите API-ключ и Folder ID.</li>
+        </ul>
+    </section>
+
+    <section id="s4">
+        <h2>4. Вкладка «Персональные голоса» — индивидуальный микшер</h2>
+        <p>Позволяет назначить любому собеседнику отдельный голос, громкость и скорость речи:</p>
+        <ol>
+            <li>Выберите ник из списка (уже настроенные ники отмечены звёздочкой <code>*</code>) или впишите новый никнейм.</li>
+            <li>Выберите нужный голос, настройте громкость/скорость и нажмите <strong>«Сохранить для ника»</strong>.</li>
+            <li>Если личный голос не задан, скрипт автоматически подбирает мужской или женский голос по полу собеседника.</li>
+        </ol>
+    </section>
+    <section id="s5">
+        <h2>5. Функция «Мой голос для других» (обмен голосами в чате)</h2>
+        <p>Позволяет вам задать собственный голос и скорость речи, которыми вас будут слышать другие участники чата с установленным модулем:</p>
+        <ol>
+            <li>На вкладке <em>«Персональные голоса»</em> в нижнем блоке выберите желаемый голос из списка <strong>«Мой голос в чате у других»</strong>.</li>
+            <li>Отрегулируйте ползунок <strong>«Моя скорость речи»</strong> и при необходимости проверьте звучание кнопкой <strong>«🔊»</strong>.</li>
+            <li>Поставьте галочку <strong>«Передавать мой голос при входе в чат»</strong> и нажмите <strong>«Сохранить мой голос в профиль»</strong>.</li>
+        </ol>
+        <div class="box-tip">
+            <strong>Как это работает:</strong> При каждом входе в чат скрипт автоматически отправляет в общий канал приветствие со скрытой голосовой меткой. Остальные участники модуля автоматически запоминают ваш голос и озвучивают все ваши дальнейшие сообщения именно им.
+        </div>
+    </section>
+
+    <section id="s6">
+        <h2>6. Голосовой ввод сообщений (режим рации)</h2>
+        <p>Позволяет надиктовывать и отправлять сообщения в чат без клавиатуры — функция особенно удобна для слабовидящих и незрячих пользователей.</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Действие</th>
+                    <th>Реакция программы</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Нажали и удерживаете <kbd>Левый Ctrl</kbd> (дольше 0.25 сек)</td>
+                    <td>Активируется окно CommFort, звучит <strong>высокий звуковой сигнал</strong> — микрофон включён, произнесите вашу фразу.</td>
+                </tr>
+                <tr>
+                    <td>Отпустили <kbd>Левый Ctrl</kbd></td>
+                    <td>Звучит <strong>низкий звуковой сигнал</strong> — запись остановлена, речь мгновенно переводится в текст и отправляется в чат.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="box-warn">
+            <strong>Защита от случайных срабатываний:</strong> Быстрые нажатия клавиши <kbd>Ctrl</kbd> в комбинациях (<kbd>Ctrl</kbd>+<kbd>C</kbd>, <kbd>Ctrl</kbd>+<kbd>V</kbd>, <kbd>Ctrl</kbd>+<kbd>A</kbd>) работают в обычном режиме и запись с микрофона не запускают.
+        </div>
+        <div class="box-tip">
+            <strong>Автономность:</strong> При наличии папки <code>vosk</code> рядом со скриптом распознавание работает полностью офлайн без интернета. Если папка отсутствует, используется встроенная диктовка Windows (<kbd>Win</kbd>+<kbd>H</kbd>).
+        </div>
+    </section>
+
+    <section id="s7">
+        <h2>7. Частые вопросы, смайлы и диагностика</h2>
+        <ul>
+            <li><strong>Озвучивание смайлов и цензура:</strong> текстовые смайлы автоматически озвучиваются словами (например, <em>[улыбается]</em>, <em>[смеётся]</em>, <em>[подмигивает]</em>), а нецензурная лексика заменяется словом <em>[пик]</em>.</li>
+            <li><strong>Несколько профилей:</strong> все настройки сохраняются в файле <code>tts_settings.ini</code> раздельно для каждого логина CommFort. При смене аккаунта модуль сам переключится на нужный профиль.</li>
+            <li><strong>Если не работает микрофон при удержании Левого Ctrl:</strong> убедитесь, что на вкладке <em>«Основные»</em> стоит галочка <em>«Включить голосовой ввод»</em>, а в Параметрах Windows (<em>Конфиденциальность &rarr; Микрофон</em>) разрешён доступ классическим приложениям к микрофону.</li>
+            <li><strong>Журнал диагностики:</strong> в случае технических сбоев подробности записываются в файл <code>tts_errors.log</code> в папке скрипта.</li>
+        </ul>
+    </section>
+
+    <footer>
+        Голосовой модуль CommFort TTS &bull; Архитектура и код созданы совместно с ИИ-ассистентом Google (Gemini)
+    </footer>
+</div>
+
+<script>
+    let currentSize = 18;
+    function changeFont(delta) {
+        if (delta === 0) {
+            currentSize = 18;
+        } else {
+            currentSize = Math.min(28, Math.max(14, currentSize + delta));
+        }
+        document.documentElement.style.setProperty('--font-size', currentSize + 'px');
+    }
+</script>
+</body>
+</html>
