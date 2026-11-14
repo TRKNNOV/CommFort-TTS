@@ -26,6 +26,14 @@
 
 ---
 
+## 🖼️ Скриншоты интерфейса
+
+| Вкладка «Основные» | Вкладка «Персональные голоса» | Вкладка «О программе» |
+| :---: | :---: | :---: |
+| <img width="382" height="847" alt="tab1" src="https://github.com/user-attachments/assets/2aeb6afb-5ee7-490d-814c-b58a0143c9c5" /> | <img width="382" height="847" alt="tab2" src="https://github.com/user-attachments/assets/8c80eaec-ce5b-4fa7-ad42-7cec2e54059c" /> | <img width="382" height="847" alt="tab3" src="https://github.com/user-attachments/assets/0271ceb5-cce9-492a-8de7-3f016118c0c0" /> |
+
+---
+
 ## 🚀 Быстрый старт (Портативная сборка)
 
 1. Перейдите в раздел **[Releases](../../releases)** справа и скачайте архив **`CommFort_TTS_Portable.zip`**.
