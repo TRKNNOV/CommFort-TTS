@@ -1,13 +1,13 @@
 # 🎙️ CommFort TTS — Двусторонний голосовой модуль для клиента CommFort
 
 <p align="left">
-  <a href="[https://github.com](https://github.com/TRKNNOV/CommFort-TTS/releases)">
+  <a href="https://github.com/TRKNNOV/CommFort-TTS/releases">
     <img src="https://img.shields.io/github/v/release/TRKNNOV/CommFort-TTS?style=for-the-badge&label=Версия&color=orange" alt="Последний релиз">
   </a>
-  <a href="[https://github.com](https://github.com/TRKNNOV/CommFort-TTS/releases)">
+  <a href="https://github.com/TRKNNOV/CommFort-TTS/releases">
     <img src="https://img.shields.io/github/downloads/TRKNNOV/CommFort-TTS/total?style=for-the-badge&label=Скачиваний&color=brightgreen" alt="Всего скачиваний">
   </a>
-  <a href="[https://github.com](https://github.com/TRKNNOV/CommFort-TTS/releases)">
+  <a href="https://github.com/TRKNNOV/CommFort-TTS/releases">
     <img src="https://img.shields.io/badge/Windows-10%20%2F%2011-blue?style=for-the-badge&logo=windows" alt="Платформа">
   </a>
 </p>
