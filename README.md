@@ -1,8 +1,16 @@
 # 🎙️ CommFort TTS — Двусторонний голосовой модуль для клиента CommFort
 
-[![Последний релиз](https://shields.io)](https://github.com)
-[![Всего скачиваний](https://shields.io)](https://github.com)
-[![Платформа](https://shields.io)](https://github.com)
+<p align="left">
+  <a href="https://github.com">
+    <img src="https://img.shields.io/github/v/release/TRKNNOV/CommFort-TTS?style=for-the-badge&label=Версия&color=orange" alt="Последний релиз">
+  </a>
+  <a href="https://github.com">
+    <img src="https://img.shields.io/github/downloads/TRKNNOV/CommFort-TTS/total?style=for-the-badge&label=Скачиваний&color=brightgreen" alt="Всего скачиваний">
+  </a>
+  <a href="https://github.com">
+    <img src="https://img.shields.io/badge/Windows-10%20%2F%2011-blue?style=for-the-badge&logo=windows" alt="Платформа">
+  </a>
+</p>
 
 Автономный голосовой интерфейс для клиента чата **CommFort**, написанный на **AutoHotkey v2.0**. Обеспечивает озвучивание сообщений в реальном времени с учётом пола и ролей, децентрализованный обмен голосами между участниками и мгновенный офлайн-голосовой ввод сообщений без клавиатуры.
 
