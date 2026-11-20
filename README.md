@@ -2,10 +2,10 @@
 
 <p align="left">
   <a href="https://github.com/TRKNNOV/CommFort-TTS/releases">
-    <img src="https://img.shields.io/github/v/release/TRKNNOV/CommFort-TTS?style=for-the-badge&label=Версия&color=orange" alt="Последний релиз">
+    <img src="https://img.shields.io/github/v/release/TRKNNOV/CommFort-TTS?style=for-the-badge&label=%D0%92%D0%B5%D1%80%D1%81%D0%B8%D1%8F&color=orange" alt="Последний релиз">
   </a>
   <a href="https://github.com/TRKNNOV/CommFort-TTS/releases">
-    <img src="https://img.shields.io/github/downloads/TRKNNOV/CommFort-TTS/total?style=for-the-badge&label=Скачиваний&color=brightgreen" alt="Всего скачиваний">
+    <img src="https://img.shields.io/github/downloads/TRKNNOV/CommFort-TTS/total?style=for-the-badge&label=%D0%A1%D0%BA%D0%B0%D1%87%D0%B8%D0%B2%D0%B0%D0%BD%D0%B8%D0%B9&color=brightgreen" alt="Всего скачиваний">
   </a>
   <a href="https://github.com/TRKNNOV/CommFort-TTS/releases">
     <img src="https://img.shields.io/badge/Windows-10%20%2F%2011-blue?style=for-the-badge&logo=windows" alt="Платформа">
